@@ -1,0 +1,29 @@
+{
+  "name": "web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "clean": "rm -fr dist",
+    "dev": "bun --bun vite --mode development",
+    "build": "bun --bun run clean && NODE_ENV=production bun --bun vite build --mode production",
+    "format": "bun --bun biome check . --write --unsafe",
+    "deploy": "bash scripts/deploy.sh",
+    "check": "bun run format && bun run typecheck",
+    "typecheck": "bun --bun run tsc --noEmit -p tsconfig.app.json",
+    "preview": "bun --bun vite preview"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.1.4",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "globals": "^16.3.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2"
+  }
+}
