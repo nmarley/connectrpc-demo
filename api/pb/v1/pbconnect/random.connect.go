@@ -7,7 +7,7 @@ package pbconnect
 import (
 	connect "connectrpc.com/connect"
 	context "context"
-	pb "demoapi/pb"
+	v1 "demoapi/pb/v1"
 	errors "errors"
 	http "net/http"
 	strings "strings"
@@ -41,7 +41,7 @@ const (
 // RandomServiceClient is a client for the random.v1.RandomService service.
 type RandomServiceClient interface {
 	// Server-streaming: backend pushes updates to the browser.
-	SubscribeRandom(context.Context, *connect.Request[pb.SubscribeRequest]) (*connect.ServerStreamForClient[pb.Number], error)
+	SubscribeRandom(context.Context, *connect.Request[v1.SubscribeRequest]) (*connect.ServerStreamForClient[v1.Number], error)
 }
 
 // NewRandomServiceClient constructs a client for the random.v1.RandomService service. By default,
@@ -53,9 +53,9 @@ type RandomServiceClient interface {
 // http://api.acme.com or https://acme.com/grpc).
 func NewRandomServiceClient(httpClient connect.HTTPClient, baseURL string, opts ...connect.ClientOption) RandomServiceClient {
 	baseURL = strings.TrimRight(baseURL, "/")
-	randomServiceMethods := pb.File_v1_random_proto.Services().ByName("RandomService").Methods()
+	randomServiceMethods := v1.File_v1_random_proto.Services().ByName("RandomService").Methods()
 	return &randomServiceClient{
-		subscribeRandom: connect.NewClient[pb.SubscribeRequest, pb.Number](
+		subscribeRandom: connect.NewClient[v1.SubscribeRequest, v1.Number](
 			httpClient,
 			baseURL+RandomServiceSubscribeRandomProcedure,
 			connect.WithSchema(randomServiceMethods.ByName("SubscribeRandom")),
@@ -66,18 +66,18 @@ func NewRandomServiceClient(httpClient connect.HTTPClient, baseURL string, opts 
 
 // randomServiceClient implements RandomServiceClient.
 type randomServiceClient struct {
-	subscribeRandom *connect.Client[pb.SubscribeRequest, pb.Number]
+	subscribeRandom *connect.Client[v1.SubscribeRequest, v1.Number]
 }
 
 // SubscribeRandom calls random.v1.RandomService.SubscribeRandom.
-func (c *randomServiceClient) SubscribeRandom(ctx context.Context, req *connect.Request[pb.SubscribeRequest]) (*connect.ServerStreamForClient[pb.Number], error) {
+func (c *randomServiceClient) SubscribeRandom(ctx context.Context, req *connect.Request[v1.SubscribeRequest]) (*connect.ServerStreamForClient[v1.Number], error) {
 	return c.subscribeRandom.CallServerStream(ctx, req)
 }
 
 // RandomServiceHandler is an implementation of the random.v1.RandomService service.
 type RandomServiceHandler interface {
 	// Server-streaming: backend pushes updates to the browser.
-	SubscribeRandom(context.Context, *connect.Request[pb.SubscribeRequest], *connect.ServerStream[pb.Number]) error
+	SubscribeRandom(context.Context, *connect.Request[v1.SubscribeRequest], *connect.ServerStream[v1.Number]) error
 }
 
 // NewRandomServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -86,7 +86,7 @@ type RandomServiceHandler interface {
 // By default, handlers support the Connect, gRPC, and gRPC-Web protocols with the binary Protobuf
 // and JSON codecs. They also support gzip compression.
 func NewRandomServiceHandler(svc RandomServiceHandler, opts ...connect.HandlerOption) (string, http.Handler) {
-	randomServiceMethods := pb.File_v1_random_proto.Services().ByName("RandomService").Methods()
+	randomServiceMethods := v1.File_v1_random_proto.Services().ByName("RandomService").Methods()
 	randomServiceSubscribeRandomHandler := connect.NewServerStreamHandler(
 		RandomServiceSubscribeRandomProcedure,
 		svc.SubscribeRandom,
@@ -106,6 +106,6 @@ func NewRandomServiceHandler(svc RandomServiceHandler, opts ...connect.HandlerOp
 // UnimplementedRandomServiceHandler returns CodeUnimplemented from all methods.
 type UnimplementedRandomServiceHandler struct{}
 
-func (UnimplementedRandomServiceHandler) SubscribeRandom(context.Context, *connect.Request[pb.SubscribeRequest], *connect.ServerStream[pb.Number]) error {
+func (UnimplementedRandomServiceHandler) SubscribeRandom(context.Context, *connect.Request[v1.SubscribeRequest], *connect.ServerStream[v1.Number]) error {
 	return connect.NewError(connect.CodeUnimplemented, errors.New("random.v1.RandomService.SubscribeRandom is not implemented"))
 }

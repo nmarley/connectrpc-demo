@@ -112,7 +112,7 @@ const file_v1_random_proto_rawDesc = "" +
 	"\x06Number\x12\x14\n" +
 	"\x05value\x18\x01 \x01(\x05R\x05value2T\n" +
 	"\rRandomService\x12C\n" +
-	"\x0fSubscribeRandom\x12\x1b.random.v1.SubscribeRequest\x1a\x11.random.v1.Number0\x01B\x0fZ\rdemoapi/pb;pbb\x06proto3"
+	"\x0fSubscribeRandom\x12\x1b.random.v1.SubscribeRequest\x1a\x11.random.v1.Number0\x01B\x12Z\x10demoapi/pb/v1;pbb\x06proto3"
 
 var (
 	file_v1_random_proto_rawDescOnce sync.Once

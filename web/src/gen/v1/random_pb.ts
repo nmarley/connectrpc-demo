@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file v1/random.proto.
  */
 export const file_v1_random: GenFile = /*@__PURE__*/
-  fileDesc("Cg92MS9yYW5kb20ucHJvdG8SCXJhbmRvbS52MSISChBTdWJzY3JpYmVSZXF1ZXN0IhcKBk51bWJlchINCgV2YWx1ZRgBIAEoBTJUCg1SYW5kb21TZXJ2aWNlEkMKD1N1YnNjcmliZVJhbmRvbRIbLnJhbmRvbS52MS5TdWJzY3JpYmVSZXF1ZXN0GhEucmFuZG9tLnYxLk51bWJlcjABQg9aDWRlbW9hcGkvcGI7cGJiBnByb3RvMw");
+  fileDesc("Cg92MS9yYW5kb20ucHJvdG8SCXJhbmRvbS52MSISChBTdWJzY3JpYmVSZXF1ZXN0IhcKBk51bWJlchINCgV2YWx1ZRgBIAEoBTJUCg1SYW5kb21TZXJ2aWNlEkMKD1N1YnNjcmliZVJhbmRvbRIbLnJhbmRvbS52MS5TdWJzY3JpYmVSZXF1ZXN0GhEucmFuZG9tLnYxLk51bWJlcjABQhJaEGRlbW9hcGkvcGIvdjE7cGJiBnByb3RvMw");
 
 /**
  * Request is empty; we just subscribe.

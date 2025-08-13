@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package random.v1;
 
-option go_package = "demoapi/pb;pb";
+option go_package = "demoapi/pb/v1;pb";
 
 // Request is empty; we just subscribe.
 message SubscribeRequest {}
