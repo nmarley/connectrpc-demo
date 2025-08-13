@@ -1,6 +1,9 @@
-version: v1
-deps:
-  - buf.build/bufbuild/protovalidate
-build:
-  roots:
-    - api/proto
+version: v2
+modules:
+  - path: api/proto
+lint:
+  use:
+    - BASIC
+breaking:
+  use:
+    - FILE

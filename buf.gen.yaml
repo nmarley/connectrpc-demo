@@ -1,15 +1,14 @@
-version: v1
+version: v2
 plugins:
-  - plugin: go
+  - local: protoc-gen-go
     out: api/pb
     opt: paths=source_relative
-  - plugin: connect-go
+  - local: protoc-gen-connect-go
     out: api/pb
     opt: paths=source_relative
-  - plugin: es
+  - local: protoc-gen-es
     out: web/src/gen
     opt: target=ts
-  - plugin: connect-es
+  - local: protoc-gen-connect-es
     out: web/src/gen
-    opt:
-      - target=ts
+    opt: target=ts
