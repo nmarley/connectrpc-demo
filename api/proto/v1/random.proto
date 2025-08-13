@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package random.v1;
+
+option go_package = "example/api/random/v1;randomv1";
+
+// Request is empty; we just subscribe.
+message SubscribeRequest {}
+
+// The stream item.
+message Number {
+  int32 value = 1;
+}
+
+service RandomService {
+  // Server-streaming: backend pushes updates to the browser.
+  rpc SubscribeRandom(SubscribeRequest) returns (stream Number);
+}
