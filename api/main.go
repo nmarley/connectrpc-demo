@@ -2,10 +2,11 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"connectrpc.com/connect"
 	"golang.org/x/net/http2"
@@ -22,8 +23,24 @@ func (s *randomService) SubscribeRandom(
 	req *connect.Request[pb.SubscribeRequest],
 	stream *connect.ServerStream[pb.Number],
 ) error {
-	// TODO: Implement streaming logic
-	return connect.NewError(connect.CodeUnimplemented, errors.New("not implemented yet"))
+	ticker := time.NewTicker(3 * time.Second)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-ticker.C:
+			randomNum := rand.Int31()
+			number := &pb.Number{Value: randomNum}
+
+			if err := stream.Send(number); err != nil {
+				return err
+			}
+
+			log.Printf("Sent random number: %d", randomNum)
+		}
+	}
 }
 
 func main() {
