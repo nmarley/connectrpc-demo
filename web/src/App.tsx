@@ -1,7 +1,7 @@
 import { create } from '@bufbuild/protobuf';
 import { createClient } from '@connectrpc/connect';
 import { createConnectTransport } from '@connectrpc/connect-web';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RandomService, SubscribeRequestSchema } from './gen/v1/random_pb';
 import './App.css';
 
@@ -12,6 +12,7 @@ const transport = createConnectTransport({
 });
 
 const client = createClient(RandomService, transport);
+const subscribeRequest = create(SubscribeRequestSchema);
 
 function App() {
     const [randomNumbers, setRandomNumbers] = useState<
@@ -21,8 +22,6 @@ function App() {
     const [error, setError] = useState<string | null>(null);
 
     const abortControllerRef = useRef<AbortController | null>(null);
-
-    const subscribeRequest = useMemo(() => create(SubscribeRequestSchema), []);
 
     useEffect(() => {
         abortControllerRef.current = new AbortController();
@@ -65,7 +64,7 @@ function App() {
             abortController.abort();
             setIsConnected(false);
         };
-    }, [subscribeRequest]);
+    }, []);
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
