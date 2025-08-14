@@ -24,12 +24,16 @@ check:
 build:
 	go build ./cmd/worker-server
 	go build ./cmd/worker-cli
+	go build ./cmd/random-server
 
 cli:
 	go build ./cmd/worker-cli
 
 server:
 	go build ./cmd/worker-server
+
+random-server:
+	go build ./cmd/random-server
 
 coverage:
 	go test -race -count=1 -v ./... -coverprofile=coverage.out
@@ -40,4 +44,4 @@ test:
 	go test -race -count=1 -v ./...
 
 clean:
-	rm -f ./worker-server ./worker-cli ./coverage.out
+	rm -f ./worker-server ./worker-cli ./random-server ./coverage.out
