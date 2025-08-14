@@ -1,7 +1,7 @@
 import { create } from '@bufbuild/protobuf';
 import { createClient } from '@connectrpc/connect';
 import { createConnectTransport } from '@connectrpc/connect-web';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { RandomService, SubscribeRequestSchema } from './gen/v1/random_pb';
 import './App.css';
 
@@ -20,15 +20,25 @@ function App() {
     const [isConnected, setIsConnected] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const abortControllerRef = useRef<AbortController | null>(null);
+
+    const subscribeRequest = useMemo(() => create(SubscribeRequestSchema), []);
+
     useEffect(() => {
+        abortControllerRef.current = new AbortController();
+        const abortController = abortControllerRef.current;
+
         const subscribe = async () => {
             try {
                 setError(null);
                 setIsConnected(true);
 
                 for await (const response of client.subscribeRandom(
-                    create(SubscribeRequestSchema),
+                    subscribeRequest,
+                    { signal: abortController.signal },
                 )) {
+                    if (abortController.signal.aborted) break;
+
                     setRandomNumbers((prev) => [
                         ...prev.slice(-9),
                         {
@@ -38,15 +48,24 @@ function App() {
                     ]);
                 }
             } catch (err) {
-                setError(
-                    err instanceof Error ? err.message : 'Connection failed',
-                );
-                setIsConnected(false);
+                if (!abortController.signal.aborted) {
+                    setError(
+                        err instanceof Error
+                            ? err.message
+                            : 'Connection failed',
+                    );
+                    setIsConnected(false);
+                }
             }
         };
 
         subscribe();
-    }, []);
+
+        return () => {
+            abortController.abort();
+            setIsConnected(false);
+        };
+    }, [subscribeRequest]);
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
