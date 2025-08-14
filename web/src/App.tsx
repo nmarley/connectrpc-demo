@@ -15,11 +15,10 @@ const client = createClient(RandomService, transport);
 const subscribeRequest = create(SubscribeRequestSchema);
 
 function App() {
-    const [randomNumbers, setRandomNumbers] = useState<
-        { id: string; value: number }[]
-    >([]);
+    const [currentNumber, setCurrentNumber] = useState<number | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [fadeClass, setFadeClass] = useState('');
 
     const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -38,13 +37,9 @@ function App() {
                 )) {
                     if (abortController.signal.aborted) break;
 
-                    setRandomNumbers((prev) => [
-                        ...prev.slice(-9),
-                        {
-                            id: `${Date.now()}-${Math.random()}`,
-                            value: response.value,
-                        },
-                    ]);
+                    setFadeClass('fade-in');
+                    setCurrentNumber(response.value);
+                    setTimeout(() => setFadeClass(''), 500);
                 }
             } catch (err) {
                 if (!abortController.signal.aborted) {
@@ -93,46 +88,40 @@ function App() {
                     backgroundColor: '#f9f9f9',
                     color: '#333',
                     fontFamily: 'Monaco, Consolas, monospace',
-                    fontSize: '18px',
-                    overflow: 'hidden',
-                    position: 'relative',
+                    fontSize: '24px',
                     display: 'flex',
                     alignItems: 'center',
+                    justifyContent: 'center',
                 }}
             >
-                {randomNumbers.length === 0 ? (
+                {currentNumber === null ? (
                     <div
                         style={{
-                            padding: '0 20px',
                             color: '#666',
                             fontStyle: 'italic',
+                            fontSize: '16px',
                         }}
                     >
                         Waiting for stream...
                     </div>
                 ) : (
-                    <div
-                        style={{
-                            display: 'flex',
-                            whiteSpace: 'nowrap',
-                            animation: 'ticker 20s linear infinite',
-                        }}
-                    >
-                        {randomNumbers.map((item) => (
-                            <span key={item.id} style={{ marginRight: '40px' }}>
-                                ... {item.value} ...
-                            </span>
-                        ))}
+                    <div className={fadeClass} style={{ fontWeight: 'bold' }}>
+                        {currentNumber}
                     </div>
                 )}
                 <style>
                     {`
-                        @keyframes ticker {
+                        .fade-in {
+                            animation: fadeIn 0.5s ease-in;
+                        }
+                        @keyframes fadeIn {
                             from {
-                                transform: translateX(100%);
+                                opacity: 0;
+                                transform: scale(0.8);
                             }
                             to {
-                                transform: translateX(-100%);
+                                opacity: 1;
+                                transform: scale(1);
                             }
                         }
                     `}
