@@ -23,6 +23,21 @@ func (s *randomService) SubscribeRandom(
 	req *connect.Request[pb.SubscribeRequest],
 	stream *connect.ServerStream[pb.Number],
 ) error {
+	sendNumber := func() error {
+		randomNum := rand.Int31()
+		number := &pb.Number{Value: randomNum}
+		if err := stream.Send(number); err != nil {
+			return err
+		}
+		log.Printf("Sent random number: %d", randomNum)
+		return nil
+	}
+
+	// Send first number immediately
+	if err := sendNumber(); err != nil {
+		return err
+	}
+
 	ticker := time.NewTicker(3 * time.Second)
 	defer ticker.Stop()
 
@@ -31,14 +46,9 @@ func (s *randomService) SubscribeRandom(
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-ticker.C:
-			randomNum := rand.Int31()
-			number := &pb.Number{Value: randomNum}
-
-			if err := stream.Send(number); err != nil {
+			if err := sendNumber(); err != nil {
 				return err
 			}
-
-			log.Printf("Sent random number: %d", randomNum)
 		}
 	}
 }
