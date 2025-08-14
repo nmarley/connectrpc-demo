@@ -6,7 +6,9 @@ import { RandomService, SubscribeRequestSchema } from './gen/v1/random_pb';
 import './App.css';
 
 const transport = createConnectTransport({
-    baseUrl: 'http://localhost:8083',
+    baseUrl: '/api',
+    useBinaryFormat: false,
+    interceptors: [],
 });
 
 const client = createClient(RandomService, transport);
