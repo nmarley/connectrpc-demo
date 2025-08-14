@@ -86,37 +86,58 @@ function App() {
                 </div>
             )}
 
-            <h2>Latest Random Numbers:</h2>
+            <h2>Live Random Number Stream:</h2>
             <div
                 style={{
                     border: '1px solid #ccc',
-                    padding: '10px',
-                    minHeight: '200px',
+                    height: '80px',
                     backgroundColor: '#f9f9f9',
                     color: '#333',
+                    fontFamily: 'Monaco, Consolas, monospace',
+                    fontSize: '18px',
+                    overflow: 'hidden',
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
                 }}
             >
                 {randomNumbers.length === 0 ? (
-                    <p>Waiting for numbers...</p>
+                    <div
+                        style={{
+                            padding: '0 20px',
+                            color: '#666',
+                            fontStyle: 'italic',
+                        }}
+                    >
+                        Waiting for stream...
+                    </div>
                 ) : (
-                    randomNumbers.map((item, index) => (
-                        <div
-                            key={item.id}
-                            style={{
-                                padding: '5px 0',
-                                fontSize: '18px',
-                                opacity:
-                                    index === randomNumbers.length - 1
-                                        ? 1
-                                        : 0.7 -
-                                          (randomNumbers.length - index - 1) *
-                                              0.1,
-                            }}
-                        >
-                            {item.value}
-                        </div>
-                    ))
+                    <div
+                        style={{
+                            display: 'flex',
+                            whiteSpace: 'nowrap',
+                            animation: 'ticker 20s linear infinite',
+                        }}
+                    >
+                        {randomNumbers.map((item) => (
+                            <span key={item.id} style={{ marginRight: '40px' }}>
+                                ... {item.value} ...
+                            </span>
+                        ))}
+                    </div>
                 )}
+                <style>
+                    {`
+                        @keyframes ticker {
+                            from {
+                                transform: translateX(100%);
+                            }
+                            to {
+                                transform: translateX(-100%);
+                            }
+                        }
+                    `}
+                </style>
             </div>
         </div>
     );
