@@ -74,6 +74,7 @@ function App() {
                     padding: '10px',
                     minHeight: '200px',
                     backgroundColor: '#f9f9f9',
+                    color: '#333',
                 }}
             >
                 {randomNumbers.length === 0 ? (
