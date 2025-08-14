@@ -12,7 +12,9 @@ const transport = createConnectTransport({
 const client = createClient(RandomService, transport);
 
 function App() {
-    const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
+    const [randomNumbers, setRandomNumbers] = useState<
+        { id: string; value: number }[]
+    >([]);
     const [isConnected, setIsConnected] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -27,7 +29,10 @@ function App() {
                 )) {
                     setRandomNumbers((prev) => [
                         ...prev.slice(-9),
-                        response.value,
+                        {
+                            id: `${Date.now()}-${Math.random()}`,
+                            value: response.value,
+                        },
                     ]);
                 }
             } catch (err) {
@@ -72,9 +77,9 @@ function App() {
                 {randomNumbers.length === 0 ? (
                     <p>Waiting for numbers...</p>
                 ) : (
-                    randomNumbers.map((num, index) => (
+                    randomNumbers.map((item, index) => (
                         <div
-                            key={index}
+                            key={item.id}
                             style={{
                                 padding: '5px 0',
                                 fontSize: '18px',
@@ -86,7 +91,7 @@ function App() {
                                               0.1,
                             }}
                         >
-                            {num}
+                            {item.value}
                         </div>
                     ))
                 )}

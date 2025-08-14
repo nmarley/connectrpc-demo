@@ -4,7 +4,7 @@
 // @ts-nocheck
 
 import { MethodKind } from '@bufbuild/protobuf';
-import { Number, SubscribeRequest } from './random_pb.js';
+import { Number as NumberMessage, SubscribeRequest } from './random_pb.js';
 
 /**
  * @generated from service random.v1.RandomService
@@ -20,7 +20,7 @@ export const RandomService = {
         subscribeRandom: {
             name: 'SubscribeRandom',
             I: SubscribeRequest,
-            O: Number,
+            O: NumberMessage,
             kind: MethodKind.ServerStreaming,
         },
     },
