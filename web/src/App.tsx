@@ -1,38 +1,97 @@
-import { useState } from 'react';
-import viteLogo from '/vite.svg';
-import reactLogo from './assets/react.svg';
+import { create } from '@bufbuild/protobuf';
+import { createClient } from '@connectrpc/connect';
+import { createConnectTransport } from '@connectrpc/connect-web';
+import { useEffect, useState } from 'react';
+import { RandomService, SubscribeRequestSchema } from './gen/v1/random_pb';
 import './App.css';
 
+const transport = createConnectTransport({
+    baseUrl: 'http://localhost:8083',
+});
+
+const client = createClient(RandomService, transport);
+
 function App() {
-    const [count, setCount] = useState(0);
+    const [randomNumbers, setRandomNumbers] = useState<number[]>([]);
+    const [isConnected, setIsConnected] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const subscribe = async () => {
+            try {
+                setError(null);
+                setIsConnected(true);
+
+                for await (const response of client.subscribeRandom(
+                    create(SubscribeRequestSchema),
+                )) {
+                    setRandomNumbers((prev) => [
+                        ...prev.slice(-9),
+                        response.value,
+                    ]);
+                }
+            } catch (err) {
+                setError(
+                    err instanceof Error ? err.message : 'Connection failed',
+                );
+                setIsConnected(false);
+            }
+        };
+
+        subscribe();
+    }, []);
 
     return (
-        <>
-            <div>
-                <a href="https://vite.dev" target="_blank" rel="noopener">
-                    <img src={viteLogo} className="logo" alt="Vite logo" />
-                </a>
-                <a href="https://react.dev" target="_blank" rel="noopener">
-                    <img
-                        src={reactLogo}
-                        className="logo react"
-                        alt="React logo"
-                    />
-                </a>
+        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+            <h1>ConnectRPC Random Number Stream</h1>
+
+            <div style={{ marginBottom: '20px' }}>
+                Status:{' '}
+                {isConnected ? (
+                    <span style={{ color: 'green' }}>Connected</span>
+                ) : (
+                    <span style={{ color: 'red' }}>Disconnected</span>
+                )}
             </div>
-            <h1>Vite + React</h1>
-            <div className="card">
-                <button onClick={() => setCount((count) => count + 1)}>
-                    count is {count}
-                </button>
-                <p>
-                    Edit <code>src/App.tsx</code> and save to test HMR
-                </p>
+
+            {error && (
+                <div style={{ color: 'red', marginBottom: '20px' }}>
+                    Error: {error}
+                </div>
+            )}
+
+            <h2>Latest Random Numbers:</h2>
+            <div
+                style={{
+                    border: '1px solid #ccc',
+                    padding: '10px',
+                    minHeight: '200px',
+                    backgroundColor: '#f9f9f9',
+                }}
+            >
+                {randomNumbers.length === 0 ? (
+                    <p>Waiting for numbers...</p>
+                ) : (
+                    randomNumbers.map((num, index) => (
+                        <div
+                            key={index}
+                            style={{
+                                padding: '5px 0',
+                                fontSize: '18px',
+                                opacity:
+                                    index === randomNumbers.length - 1
+                                        ? 1
+                                        : 0.7 -
+                                          (randomNumbers.length - index - 1) *
+                                              0.1,
+                            }}
+                        >
+                            {num}
+                        </div>
+                    ))
+                )}
             </div>
-            <p className="read-the-docs">
-                Click on the Vite and React logos to learn more
-            </p>
-        </>
+        </div>
     );
 }
 

@@ -3,26 +3,25 @@
 /* eslint-disable */
 // @ts-nocheck
 
-import { Number, SubscribeRequest } from "./random_pb.js";
-import { MethodKind } from "@bufbuild/protobuf";
+import { MethodKind } from '@bufbuild/protobuf';
+import { Number, SubscribeRequest } from './random_pb.js';
 
 /**
  * @generated from service random.v1.RandomService
  */
 export const RandomService = {
-  typeName: "random.v1.RandomService",
-  methods: {
-    /**
-     * Server-streaming: backend pushes updates to the browser.
-     *
-     * @generated from rpc random.v1.RandomService.SubscribeRandom
-     */
-    subscribeRandom: {
-      name: "SubscribeRandom",
-      I: SubscribeRequest,
-      O: Number,
-      kind: MethodKind.ServerStreaming,
+    typeName: 'random.v1.RandomService',
+    methods: {
+        /**
+         * Server-streaming: backend pushes updates to the browser.
+         *
+         * @generated from rpc random.v1.RandomService.SubscribeRandom
+         */
+        subscribeRandom: {
+            name: 'SubscribeRandom',
+            I: SubscribeRequest,
+            O: Number,
+            kind: MethodKind.ServerStreaming,
+        },
     },
-  }
 } as const;
-

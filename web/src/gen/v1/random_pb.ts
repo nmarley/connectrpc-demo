@@ -2,64 +2,74 @@
 // @generated from file v1/random.proto (package random.v1, syntax proto3)
 /* eslint-disable */
 
-import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv2";
-import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
-import type { Message } from "@bufbuild/protobuf";
+import type { Message } from '@bufbuild/protobuf';
+import type {
+    GenFile,
+    GenMessage,
+    GenService,
+} from '@bufbuild/protobuf/codegenv2';
+import {
+    fileDesc,
+    messageDesc,
+    serviceDesc,
+} from '@bufbuild/protobuf/codegenv2';
 
 /**
  * Describes the file v1/random.proto.
  */
-export const file_v1_random: GenFile = /*@__PURE__*/
-  fileDesc("Cg92MS9yYW5kb20ucHJvdG8SCXJhbmRvbS52MSISChBTdWJzY3JpYmVSZXF1ZXN0IhcKBk51bWJlchINCgV2YWx1ZRgBIAEoBTJUCg1SYW5kb21TZXJ2aWNlEkMKD1N1YnNjcmliZVJhbmRvbRIbLnJhbmRvbS52MS5TdWJzY3JpYmVSZXF1ZXN0GhEucmFuZG9tLnYxLk51bWJlcjABQhJaEGRlbW9hcGkvcGIvdjE7cGJiBnByb3RvMw");
+export const file_v1_random: GenFile =
+    /*@__PURE__*/
+    fileDesc(
+        'Cg92MS9yYW5kb20ucHJvdG8SCXJhbmRvbS52MSISChBTdWJzY3JpYmVSZXF1ZXN0IhcKBk51bWJlchINCgV2YWx1ZRgBIAEoBTJUCg1SYW5kb21TZXJ2aWNlEkMKD1N1YnNjcmliZVJhbmRvbRIbLnJhbmRvbS52MS5TdWJzY3JpYmVSZXF1ZXN0GhEucmFuZG9tLnYxLk51bWJlcjABQhJaEGRlbW9hcGkvcGIvdjE7cGJiBnByb3RvMw',
+    );
 
 /**
  * Request is empty; we just subscribe.
  *
  * @generated from message random.v1.SubscribeRequest
  */
-export type SubscribeRequest = Message<"random.v1.SubscribeRequest"> & {
-};
+export type SubscribeRequest = Message<'random.v1.SubscribeRequest'> & {};
 
 /**
  * Describes the message random.v1.SubscribeRequest.
  * Use `create(SubscribeRequestSchema)` to create a new message.
  */
-export const SubscribeRequestSchema: GenMessage<SubscribeRequest> = /*@__PURE__*/
-  messageDesc(file_v1_random, 0);
+export const SubscribeRequestSchema: GenMessage<SubscribeRequest> =
+    /*@__PURE__*/
+    messageDesc(file_v1_random, 0);
 
 /**
  * The stream item.
  *
  * @generated from message random.v1.Number
  */
-export type Number = Message<"random.v1.Number"> & {
-  /**
-   * @generated from field: int32 value = 1;
-   */
-  value: number;
+export type Number = Message<'random.v1.Number'> & {
+    /**
+     * @generated from field: int32 value = 1;
+     */
+    value: number;
 };
 
 /**
  * Describes the message random.v1.Number.
  * Use `create(NumberSchema)` to create a new message.
  */
-export const NumberSchema: GenMessage<Number> = /*@__PURE__*/
-  messageDesc(file_v1_random, 1);
+export const NumberSchema: GenMessage<Number> =
+    /*@__PURE__*/
+    messageDesc(file_v1_random, 1);
 
 /**
  * @generated from service random.v1.RandomService
  */
 export const RandomService: GenService<{
-  /**
-   * Server-streaming: backend pushes updates to the browser.
-   *
-   * @generated from rpc random.v1.RandomService.SubscribeRandom
-   */
-  subscribeRandom: {
-    methodKind: "server_streaming";
-    input: typeof SubscribeRequestSchema;
-    output: typeof NumberSchema;
-  },
-}> = /*@__PURE__*/
-  serviceDesc(file_v1_random, 0);
-
+    /**
+     * Server-streaming: backend pushes updates to the browser.
+     *
+     * @generated from rpc random.v1.RandomService.SubscribeRandom
+     */
+    subscribeRandom: {
+        methodKind: 'server_streaming';
+        input: typeof SubscribeRequestSchema;
+        output: typeof NumberSchema;
+    };
+}> = /*@__PURE__*/ serviceDesc(file_v1_random, 0);
